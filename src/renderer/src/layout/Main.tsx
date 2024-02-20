@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Layout, Menu, MenuProps, theme, Typography } from 'antd'
+import { Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { CalendarIcon, CheckCircleIcon, SunIcon } from 'lucide-react'
+import { COLORS } from '../constants'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -51,8 +52,7 @@ export const MainLayout: React.FC = () => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: 'white',
-          borderBottom: `1px solid lightgray`
+          backgroundColor: COLORS['400']
         }}
       >
         <div className="demo-logo" />
@@ -61,21 +61,17 @@ export const MainLayout: React.FC = () => {
         </Typography.Title>
       </Header>
       <Layout>
-        <Sider width={200} style={{ background: colorBgContainer }}>
+        <Sider width={200} className="shadow-sm">
           <Menu
             mode="inline"
-            style={{ height: '100%', borderRight: 0 }}
+            style={{ height: '100%', borderRight: 0, backgroundColor: COLORS['100'] }}
             items={pageLinks}
             selectedKeys={[current]}
           />
         </Sider>
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+        <Layout style={{ padding: '24px 24px', backgroundColor: COLORS['50'] }}>
           <Content
+            className="shadow-sm"
             style={{
               padding: 24,
               margin: 0,
