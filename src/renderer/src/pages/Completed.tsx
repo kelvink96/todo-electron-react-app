@@ -2,7 +2,7 @@ import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { IStatus, ITaskResult } from '../../../../interfaces'
 import { Divider, Flex, Spin, Typography } from 'antd'
 import { TaskItemCard } from '../components'
-import { InfinityIcon } from 'lucide-react'
+import { CheckCircleIcon } from 'lucide-react'
 
 export const CompletedPage = (): ReactElement | null => {
   const [tasks, setTasks] = useState<ITaskResult[]>([])
@@ -31,9 +31,10 @@ export const CompletedPage = (): ReactElement | null => {
   return (
     <>
       {loading && <Spin />}
-      <Flex justify="space-between" align="center">
+      <Flex align="center" gap="small">
+        <CheckCircleIcon />
         <Typography.Title level={3} className="m-0">
-          <InfinityIcon /> Completed
+          Completed
         </Typography.Title>
       </Flex>
       <Divider />

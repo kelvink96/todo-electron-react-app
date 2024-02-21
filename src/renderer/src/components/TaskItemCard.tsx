@@ -12,7 +12,7 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
   console.log(data)
 
   return (
-    <Card>
+    <Card className="shadow-sm">
       {data?.title}
       {data?.description}
     </Card>

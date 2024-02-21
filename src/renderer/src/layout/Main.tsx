@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
+import { Button, ConfigProvider, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { CalendarIcon, CheckCircleIcon, SunIcon } from 'lucide-react'
 import { COLORS } from '../constants'
@@ -82,7 +82,8 @@ export const MainLayout: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             backgroundColor: COLORS['700'],
-            color: COLORS['50']
+            color: COLORS['50'],
+            borderBottom: `1px solid ${COLORS['400']}`
           }}
         >
           <div className="demo-logo" />
@@ -97,12 +98,28 @@ export const MainLayout: React.FC = () => {
         </Header>
         <Layout>
           <Sider width={200} className="shadow-sm">
-            <Menu
-              mode="inline"
-              style={{ height: '100%', borderRight: 0, backgroundColor: COLORS['100'] }}
-              items={pageLinks}
-              selectedKeys={[current]}
-            />
+            <ConfigProvider
+              theme={{
+                components: {
+                  Menu: {
+                    itemColor: 'white',
+                    itemBg: COLORS['700'],
+                    itemHoverBg: COLORS['600'],
+                    itemHoverColor: 'white'
+                  }
+                }
+              }}
+            >
+              <Menu
+                mode="inline"
+                style={{
+                  height: '100%',
+                  borderRight: 0
+                }}
+                items={pageLinks}
+                selectedKeys={[current]}
+              />
+            </ConfigProvider>
           </Sider>
           <Layout style={{ padding: '24px 24px', backgroundColor: COLORS['50'] }}>
             <Content

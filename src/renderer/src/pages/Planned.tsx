@@ -2,7 +2,7 @@ import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { IStatus, ITaskResult } from '../../../../interfaces'
 import { TaskItemCard } from '../components'
 import { Divider, Flex, Spin, Typography } from 'antd'
-import { InfinityIcon } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 
 export const PlannedPage = (): ReactElement | null => {
   const [tasks, setTasks] = useState<ITaskResult[]>([])
@@ -31,9 +31,10 @@ export const PlannedPage = (): ReactElement | null => {
   return (
     <>
       {loading && <Spin />}
-      <Flex justify="space-between" align="center">
+      <Flex gap="small" align="center">
+        <CalendarIcon />
         <Typography.Title level={3} className="m-0">
-          <InfinityIcon /> In Progress
+          Planned
         </Typography.Title>
       </Flex>
       <Divider />
