@@ -37,7 +37,7 @@ export const NewTaskItemModal = (props: Props): ReactElement | null => {
       footer={null}
     >
       <Form
-        name="basic"
+        name="new-task-form"
         layout="vertical"
         labelCol={{ span: 16 }}
         wrapperCol={{ span: 24 }}

@@ -31,6 +31,7 @@
     "@types/react-router-dom": "^5.3.3",
     "antd": "^5.14.1",
     "better-sqlite3": "^9.4.1",
+    "dayjs": "^1.11.10",
     "electron-router-dom": "^1.0.5",
     "electron-updater": "^6.1.7",
     "lodash": "^4.17.21",

@@ -19,7 +19,6 @@ const addTask = (payload: ITaskBody): unknown => {
     due_date: payload.dueDate || ''
   }
 
-  // const query = `INSERT INTO tasks (title, description, priority, status, created_at) VALUES('${body.title}', '${body.description}', '${body.priority}', '${body.status}', '${body.created_at}')`
   const query = `INSERT INTO tasks (title, description, priority, status, created_at, deleted, due_date)
       VALUES (:title, :description, :priority, :status, :created_at, :deleted, :due_date)`
   const stmt = db.prepare(query)
@@ -28,13 +27,19 @@ const addTask = (payload: ITaskBody): unknown => {
 }
 
 const getTasksByStatus = (status: IStatus): ITaskResult[] => {
-  // const query = `INSERT INTO tasks (title, description, priority, status, created_at) VALUES('${body.title}', '${body.description}', '${body.priority}', '${body.status}', '${body.created_at}')`
   const query = `SELECT * FROM tasks WHERE status = ${status}`
   const stmt = db.prepare(query)
 
   return stmt.all()
 }
 
-const tasksQuery = { getTasks, addTask, getTasksByStatus }
+const getTaskById = (id: string | number): ITaskResult => {
+  const query = `SELECT * FROM tasks WHERE id = ?`
+  const stmt = db.prepare(query)
+
+  return stmt.get(id)
+}
+
+const tasksQuery = { getTasks, addTask, getTasksByStatus, getTaskById }
 
 export default tasksQuery

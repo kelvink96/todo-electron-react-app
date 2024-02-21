@@ -36,7 +36,7 @@ export const TasksTypeWrapper = ({ groupedTasks, ...others }: Props) => {
               dataSource={groupedTasks.tasks}
               renderItem={(item) => (
                 <List.Item>
-                  <TaskItemCard data={item} />
+                  <TaskItemCard task={item} />
                 </List.Item>
               )}
             />

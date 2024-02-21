@@ -16,11 +16,16 @@ const getTasksByStatus = (status: IStatus): ITaskResult[] => {
   return tasksQuery.getTasksByStatus(status)
 }
 
+const getTaskById = (id: string | number): ITaskResult => {
+  return tasksQuery.getTaskById(id)
+}
+
 // Custom APIs for renderer
 const api = {
   getTasks,
   addTask,
-  getTasksByStatus
+  getTasksByStatus,
+  getTaskById
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
