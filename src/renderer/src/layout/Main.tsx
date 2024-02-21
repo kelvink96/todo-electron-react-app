@@ -52,11 +52,12 @@ export const MainLayout: React.FC = () => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: COLORS['400']
+          backgroundColor: COLORS['700'],
+          color: COLORS['50']
         }}
       >
         <div className="demo-logo" />
-        <Typography.Title level={4} className="m-0">
+        <Typography.Title level={4} className="m-0" style={{ color: COLORS['50'] }}>
           To-do App
         </Typography.Title>
       </Header>

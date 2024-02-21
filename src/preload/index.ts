@@ -1,8 +1,22 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import tasksQuery from '../../models/taskManager'
+import { ITaskBody } from '../../interfaces'
+
+const getTasks = (): unknown => {
+  return tasksQuery.getTasks()
+}
+
+const addTask = (body: ITaskBody): void => {
+  console.log('window.api', body)
+  tasksQuery.addTask(body)
+}
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  getTasks,
+  addTask
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
