@@ -1,8 +1,8 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Button, Card, Divider, Flex, Spin, Typography } from 'antd'
+import { Button, Divider, Flex, Spin, Typography } from 'antd'
 import { InfinityIcon } from 'lucide-react'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { NewTaskItemModal } from '../components'
+import { NewTaskItemModal, TaskItemCard } from '../components'
 import { ITaskBody, ITaskResult } from '../../../../interfaces'
 
 export const MyDayPage = (): ReactElement | null => {
@@ -21,7 +21,7 @@ export const MyDayPage = (): ReactElement | null => {
   const handleFetchTasks = useCallback(async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const res = await window.api.getTasks
+    const res = await window.api.getTasks()
     setTasks(res)
   }, [])
 
@@ -65,10 +65,10 @@ export const MyDayPage = (): ReactElement | null => {
       </Flex>
       <Divider />
       <Flex gap="middle" vertical>
-        {Array.from({ length: 6 }).map((_, idx) => (
-          <Card key={idx.toString()} hoverable>
-            Card content
-          </Card>
+        {tasks.map((task, idx) => (
+          <TaskItemCard key={idx.toString()} hoverable data={task}>
+            {task.title}
+          </TaskItemCard>
         ))}
       </Flex>
       <NewTaskItemModal

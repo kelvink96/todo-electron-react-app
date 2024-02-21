@@ -1,8 +1,9 @@
 import { Card, CardProps } from 'antd'
 import { ReactElement } from 'react'
+import { ITaskResult } from '../../../../interfaces'
 
 interface Props extends Partial<CardProps> {
-  data?: any
+  data?: ITaskResult
 }
 
 export const TaskItemCard = (props: Props): ReactElement | null => {
@@ -10,5 +11,10 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
 
   console.log(data)
 
-  return <Card></Card>
+  return (
+    <Card>
+      {data?.title}
+      {data?.description}
+    </Card>
+  )
 }

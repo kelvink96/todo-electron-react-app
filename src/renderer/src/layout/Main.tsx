@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Menu, MenuProps, theme, Typography } from 'antd'
+import { Button, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { CalendarIcon, CheckCircleIcon, SunIcon } from 'lucide-react'
 import { COLORS } from '../constants'
+import { PlusCircleOutlined } from '@ant-design/icons'
+import { ITaskBody } from '../../../../interfaces'
+import { NewTaskItemModal } from '../components'
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -40,6 +43,31 @@ export const MainLayout: React.FC = () => {
   } = theme.useToken()
   const { pathname } = useLocation()
   const [current, setCurrent] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const showModal = (): void => {
+    setIsModalOpen(true)
+  }
+
+  const handleCancel = (): void => {
+    setIsModalOpen(false)
+  }
+
+  const handleCreateTask = async (payload: ITaskBody): Promise<void> => {
+    try {
+      setLoading(true)
+      console.log('parsed_body', payload)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await window.api.addTask(payload)
+      setLoading(false)
+      setIsModalOpen(false)
+    } catch (err) {
+      console.log(err)
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     const paths = pathname.split('/')
@@ -47,44 +75,57 @@ export const MainLayout: React.FC = () => {
   }, [pathname])
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: COLORS['700'],
-          color: COLORS['50']
-        }}
-      >
-        <div className="demo-logo" />
-        <Typography.Title level={4} className="m-0" style={{ color: COLORS['50'] }}>
-          To-do App
-        </Typography.Title>
-      </Header>
-      <Layout>
-        <Sider width={200} className="shadow-sm">
-          <Menu
-            mode="inline"
-            style={{ height: '100%', borderRight: 0, backgroundColor: COLORS['100'] }}
-            items={pageLinks}
-            selectedKeys={[current]}
-          />
-        </Sider>
-        <Layout style={{ padding: '24px 24px', backgroundColor: COLORS['50'] }}>
-          <Content
-            className="shadow-sm"
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG
-            }}
-          >
-            <Outlet />
-          </Content>
+    <>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: COLORS['700'],
+            color: COLORS['50']
+          }}
+        >
+          <div className="demo-logo" />
+          <Flex justify="space-between" align="center" style={{ flexGrow: 1 }}>
+            <Typography.Title level={4} className="m-0" style={{ color: COLORS['50'] }}>
+              To-do App
+            </Typography.Title>
+            <Button type="primary" icon={<PlusCircleOutlined />} onClick={showModal}>
+              Add Task
+            </Button>
+          </Flex>
+        </Header>
+        <Layout>
+          <Sider width={200} className="shadow-sm">
+            <Menu
+              mode="inline"
+              style={{ height: '100%', borderRight: 0, backgroundColor: COLORS['100'] }}
+              items={pageLinks}
+              selectedKeys={[current]}
+            />
+          </Sider>
+          <Layout style={{ padding: '24px 24px', backgroundColor: COLORS['50'] }}>
+            <Content
+              className="shadow-sm"
+              style={{
+                padding: 24,
+                margin: 0,
+                minHeight: 280,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG
+              }}
+            >
+              <Outlet />
+            </Content>
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
+      <NewTaskItemModal
+        open={isModalOpen}
+        handleCancel={handleCancel}
+        handleOk={handleCreateTask}
+        loading={loading}
+      />
+    </>
   )
 }

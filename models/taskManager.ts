@@ -4,6 +4,7 @@ import { IStatus, ITaskBody, ITaskResult } from '../interfaces'
 const getTasks = (): ITaskResult[] => {
   const query = 'SELECT * FROM tasks;'
   const stmt = db.prepare(query)
+
   return stmt.all()
 }
 
@@ -19,14 +20,21 @@ const addTask = (payload: ITaskBody): unknown => {
   }
 
   // const query = `INSERT INTO tasks (title, description, priority, status, created_at) VALUES('${body.title}', '${body.description}', '${body.priority}', '${body.status}', '${body.created_at}')`
-  const query = db.prepare(
-    `INSERT INTO tasks (title, description, priority, status, created_at, deleted, due_date)
+  const query = `INSERT INTO tasks (title, description, priority, status, created_at, deleted, due_date)
       VALUES (:title, :description, :priority, :status, :created_at, :deleted, :due_date)`
-  )
+  const stmt = db.prepare(query)
 
-  return query.run({ ...body })
+  return stmt.run({ ...body })
 }
 
-const tasksQuery = { getTasks, addTask }
+const getTasksByStatus = (status: IStatus): ITaskResult[] => {
+  // const query = `INSERT INTO tasks (title, description, priority, status, created_at) VALUES('${body.title}', '${body.description}', '${body.priority}', '${body.status}', '${body.created_at}')`
+  const query = `SELECT * FROM tasks WHERE status = ${status}`
+  const stmt = db.prepare(query)
+
+  return stmt.all()
+}
+
+const tasksQuery = { getTasks, addTask, getTasksByStatus }
 
 export default tasksQuery

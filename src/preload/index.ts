@@ -1,9 +1,9 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import tasksQuery from '../../models/taskManager'
-import { ITaskBody } from '../../interfaces'
+import { IStatus, ITaskBody, ITaskResult } from '../../interfaces'
 
-const getTasks = (): unknown => {
+const getTasks = (): ITaskResult[] => {
   return tasksQuery.getTasks()
 }
 
@@ -12,10 +12,15 @@ const addTask = (body: ITaskBody): void => {
   tasksQuery.addTask(body)
 }
 
+const getTasksByStatus = (status: IStatus): ITaskResult[] => {
+  return tasksQuery.getTasksByStatus(status)
+}
+
 // Custom APIs for renderer
 const api = {
   getTasks,
-  addTask
+  addTask,
+  getTasksByStatus
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
