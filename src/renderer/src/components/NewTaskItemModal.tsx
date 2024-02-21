@@ -1,6 +1,8 @@
-import { Button, DatePicker, Flex, Form, Input, Modal, ModalProps, Select } from 'antd'
+import { Button, DatePicker, Divider, Flex, Form, Input, Modal, ModalProps, Select } from 'antd'
 import { ReactElement } from 'react'
 import { ITaskBody } from '../../../../interfaces'
+import dayjs from 'dayjs'
+import * as React from 'react'
 
 type FieldType = {
   title?: string
@@ -36,6 +38,7 @@ export const NewTaskItemModal = (props: Props): ReactElement | null => {
       onCancel={handleCancel}
       footer={null}
     >
+      <Divider />
       <Form
         name="new-task-form"
         layout="vertical"
@@ -77,7 +80,7 @@ export const NewTaskItemModal = (props: Props): ReactElement | null => {
         </Form.Item>
 
         <Form.Item<FieldType> label="Due Date" name="dueDate">
-          <DatePicker style={{ width: '100%' }} />
+          <DatePicker minDate={dayjs()} style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>

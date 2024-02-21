@@ -33,7 +33,7 @@ const pageLinks: MenuProps['items'] = [
   getItem(
     <Link to="/completed">Completed</Link>,
     'completed',
-    <CheckCircleIcon size={16} color="red" />
+    <CheckCircleIcon size={16} color="green" />
   )
 ]
 
@@ -61,8 +61,8 @@ export const MainLayout: React.FC = () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       await window.api.addTask(payload)
+      handleCancel()
       setLoading(false)
-      setIsModalOpen(false)
     } catch (err) {
       console.log(err)
       setLoading(false)

@@ -1,16 +1,17 @@
 import { Collapse, List, theme } from 'antd'
-import { ITaskResult } from '../../../../interfaces'
+import { IStatus, ITaskResult } from '../../../../interfaces'
 import { TaskItemCard } from './TaskItemCard'
-import { COLORS } from '../constants'
+import { geekblue, green } from '@ant-design/colors'
 
 interface Props {
   groupedTasks: {
     status: string
     tasks: ITaskResult[]
   }
+  refresh: () => void
 }
 
-export const TasksTypeWrapper = ({ groupedTasks, ...others }: Props) => {
+export const TasksTypeWrapper = ({ groupedTasks, refresh, ...others }: Props) => {
   const { token } = theme.useToken()
   console.log(groupedTasks)
 
@@ -23,20 +24,21 @@ export const TasksTypeWrapper = ({ groupedTasks, ...others }: Props) => {
 
   return (
     <Collapse
-      defaultActiveKey={['1']}
       ghost
-      style={{ background: COLORS['50'] }}
+      style={{
+        background: IStatus.inProgress === Number(groupedTasks.status) ? geekblue['1'] : green['1']
+      }}
       items={[
         {
           key: groupedTasks.status,
-          label: groupedTasks.status,
+          label: IStatus[groupedTasks.status],
           children: (
             <List
               grid={{ gutter: 16, column: 1 }}
               dataSource={groupedTasks.tasks}
               renderItem={(item) => (
                 <List.Item>
-                  <TaskItemCard task={item} />
+                  <TaskItemCard task={item} refresh={refresh} />
                 </List.Item>
               )}
             />

@@ -1,25 +1,25 @@
-import { Card, CardProps } from 'antd'
+import { Card, CardProps, Flex, Typography, notification } from 'antd'
 import { ReactElement, useCallback, useState } from 'react'
-import { ITaskResult } from '../../../../interfaces'
+import { IPrority, ITaskBody, ITaskResult } from '../../../../interfaces'
 import { TaskDetailsModal } from './TaskDetailsModal'
-import _ from 'lodash'
+import { geekblue, green, red } from '@ant-design/colors'
+import { FlagIcon } from 'lucide-react'
+import dayjs from 'dayjs'
+import { ClockCircleOutlined } from '@ant-design/icons'
 
 interface Props extends Partial<CardProps> {
   task: ITaskResult
+  refresh: () => void
 }
 
 export const TaskItemCard = (props: Props): ReactElement | null => {
-  const { task } = props
+  const { task, refresh } = props
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<ITaskResult>()
   const [loading, setLoading] = useState(false)
 
   const showModal = () => {
     setIsModalOpen(true)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
   }
 
   const handleCancel = () => {
@@ -42,25 +42,71 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
     }
   }, [])
 
+  const handleDelete = async (id: string | number): Promise<void> => {
+    try {
+      // @ts-ignore
+      await window.api.deleteTaskById(id)
+      handleCancel()
+      refresh()
+    } catch (e) {
+      console.log(e)
+      notification.error({ message: 'Task Delete', description: e?.toString() })
+    }
+  }
+
+  const handleUpdateTask = async (payload: ITaskBody): Promise<void> => {
+    try {
+      setLoading(true)
+      console.log('parsed_body', payload)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await window.api.updateTaskById(payload, task.id)
+      handleCancel()
+      refresh()
+      setLoading(false)
+    } catch (e) {
+      console.log(e)
+      setLoading(false)
+      notification.error({ message: 'Task Update', description: e?.toString() })
+    }
+  }
+
   return (
     <>
       <Card
-        className="shadow-sm"
         onClick={async () => {
           await handleFetchTaskById(task.id)
           showModal()
         }}
         hoverable
       >
-        {task?.title}
-        {task?.description}
+        <Flex justify="space-between">
+          <Typography.Text strong>{task?.title}</Typography.Text>
+          <FlagIcon
+            color={
+              task.priority === IPrority.low
+                ? green['5']
+                : task.priority === IPrority.medium
+                  ? geekblue['5']
+                  : red['5']
+            }
+            size={18}
+          />
+        </Flex>
+        {task.due_date && (
+          <Flex gap="small" align="center">
+            <ClockCircleOutlined />
+            <small>{dayjs(task.due_date).format('YYYY-MM-DD HH:mm').toString()}</small>
+          </Flex>
+        )}
       </Card>
       <TaskDetailsModal
-        data={selectedTask}
+        data={selectedTask!!}
         open={isModalOpen}
-        handleOk={handleOk}
+        handleOk={handleUpdateTask}
         handleCancel={handleCancel}
         loading={loading}
+        handleDelete={handleDelete}
       />
     </>
   )

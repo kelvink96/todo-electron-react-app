@@ -20,12 +20,22 @@ const getTaskById = (id: string | number): ITaskResult => {
   return tasksQuery.getTaskById(id)
 }
 
+const updateTaskById = (body: ITaskBody, id: string | number): void => {
+  tasksQuery.updateTaskById(body, id)
+}
+
+const deleteTaskById = (id: string | number): void => {
+  tasksQuery.deleteTaskById(id)
+}
+
 // Custom APIs for renderer
 const api = {
   getTasks,
   addTask,
   getTasksByStatus,
-  getTaskById
+  getTaskById,
+  updateTaskById,
+  deleteTaskById
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

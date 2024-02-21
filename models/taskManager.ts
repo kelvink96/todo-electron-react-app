@@ -13,10 +13,10 @@ const addTask = (payload: ITaskBody): unknown => {
     title: payload.title,
     description: payload.description || '',
     priority: Number(payload.priority),
-    status: IStatus.pending,
+    status: IStatus.inProgress,
     created_at: new Date().toISOString(),
     deleted: 0,
-    due_date: payload.dueDate || ''
+    due_date: payload.dueDate ? payload.dueDate : null
   }
 
   const query = `INSERT INTO tasks (title, description, priority, status, created_at, deleted, due_date)
@@ -40,6 +40,38 @@ const getTaskById = (id: string | number): ITaskResult => {
   return stmt.get(id)
 }
 
-const tasksQuery = { getTasks, addTask, getTasksByStatus, getTaskById }
+const updateTaskById = (payload: ITaskBody, id: string | number) => {
+  const body = {
+    id,
+    title: payload.title,
+    description: payload.description || '',
+    priority: Number(payload.priority),
+    status: Number(payload.status),
+    created_at: new Date().toISOString(),
+    deleted: 0,
+    due_date: payload.dueDate ? payload.dueDate : null
+  }
+
+  const query = `UPDATE tasks SET title = ?, description = ?, status = ?, priority = ?, due_date = ? WHERE id = ?`
+  const stmt = db.prepare(query)
+
+  return stmt.run(body.title, body.description, body.status, body.priority, body.due_date, id)
+}
+
+const deleteTaskById = (id: string | number): unknown => {
+  const query = `DELETE FROM tasks WHERE id = ?`
+  const stmt = db.prepare(query)
+
+  return stmt.run(id)
+}
+
+const tasksQuery = {
+  getTasks,
+  addTask,
+  getTasksByStatus,
+  getTaskById,
+  updateTaskById,
+  deleteTaskById
+}
 
 export default tasksQuery

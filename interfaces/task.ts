@@ -15,5 +15,6 @@ export interface ITaskBody {
   title: string
   description?: string
   priority: number | string
+  status: number | string
   dueDate?: string
 }

@@ -1,8 +1,9 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { IStatus, ITaskResult } from '../../../../interfaces'
 import { TaskItemCard } from '../components'
-import { Divider, Flex, Spin, Typography } from 'antd'
+import { Badge, Button, Divider, Flex, Result, Spin, Typography } from 'antd'
 import { CalendarIcon } from 'lucide-react'
+import { orange } from '@ant-design/colors'
 
 export const PlannedPage = (): ReactElement | null => {
   const [tasks, setTasks] = useState<ITaskResult[]>([])
@@ -24,6 +25,14 @@ export const PlannedPage = (): ReactElement | null => {
     }
   }, [window])
 
+  const refresh = async (): Promise<void> => {
+    setLoading(true)
+    setTimeout(async () => {
+      await handleFetchTasks()
+      setLoading(false)
+    }, 3000)
+  }
+
   useEffect(() => {
     handleFetchTasks()
   }, [])
@@ -36,14 +45,28 @@ export const PlannedPage = (): ReactElement | null => {
         <Typography.Title level={3} className="m-0">
           Planned
         </Typography.Title>
+        <Badge count={tasks.length} showZero color={orange['5']} />
       </Flex>
       <Divider />
       <Flex gap="middle" vertical>
-        {tasks.map((task, idx) => (
-          <TaskItemCard key={idx.toString()} hoverable data={task}>
-            {task.title}
-          </TaskItemCard>
-        ))}
+        {tasks.length === 0 ? (
+          <Result
+            status="404"
+            title="No tasks found"
+            subTitle="Sorry, no tasks found try refreshing."
+            extra={
+              <Button type="primary" onClick={refresh} loading={loading}>
+                Refresh
+              </Button>
+            }
+          />
+        ) : (
+          tasks.map((task, idx) => (
+            <TaskItemCard key={idx.toString()} hoverable task={task} refresh={refresh}>
+              {task.title}
+            </TaskItemCard>
+          ))
+        )}
       </Flex>
     </>
   )
