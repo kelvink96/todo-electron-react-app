@@ -34,3 +34,12 @@ $ pnpm build:mac
 # For Linux
 $ pnpm build:linux
 ```
+
+## Project File Structure
+- models
+  - dbManager.ts - contains all db initializer configs
+  - taskManager.ts - contains all SQL CRUD queries and statements for interacting with the tasks table
+- interfaces - contains declared types/interfaces
+- src
+  - preload - has the written window api configurations serving as a middleware connecting database executions and exposing these functions to the client side in the renderer function
+  - renderer - contains all the client side pages, routes (and respective configs), and components
