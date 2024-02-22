@@ -105,7 +105,7 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
         )}
       </Card>
       <TaskDetailsModal
-        data={selectedTask!!}
+        data={selectedTask!}
         open={isModalOpen}
         handleOk={handleUpdateTask}
         handleCancel={handleCancel}
