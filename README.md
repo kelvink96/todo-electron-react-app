@@ -1,6 +1,6 @@
 # todo-electron-react-app
 
-An Electron application with React and TypeScript
+A todo desktop application built using Electron, React(Vite), Better-Sqlite3 and Ant Design.
 
 ## Recommended IDE Setup
 
