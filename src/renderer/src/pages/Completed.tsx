@@ -1,9 +1,10 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { IStatus, ITaskResult } from '../../../../interfaces'
-import { Badge, Button, Divider, Flex, Result, Spin, Typography } from 'antd'
-import { TaskItemCard } from '../components'
+import { Badge, Button, Divider, Flex, Result, Typography } from 'antd'
+import { Loader, TaskItemCard } from '../components'
 import { CheckCircleIcon } from 'lucide-react'
 import { green } from '@ant-design/colors'
+import { SyncOutlined } from '@ant-design/icons'
+import { IStatus, ITaskResult } from '../../../../interfaces'
 
 export const CompletedPage = (): ReactElement | null => {
   const [tasks, setTasks] = useState<ITaskResult[]>([])
@@ -39,15 +40,20 @@ export const CompletedPage = (): ReactElement | null => {
 
   return (
     <>
-      {loading && <Spin />}
-      <Flex align="center" gap="small">
-        <CheckCircleIcon />
-        <Typography.Title level={3} className="m-0">
-          Completed
-        </Typography.Title>
-        <Badge count={tasks.length} showZero color={green['6']} />
+      <Flex align="center" gap="small" justify="space-between">
+        <Flex align="center" gap="small">
+          <CheckCircleIcon />
+          <Typography.Title level={3} className="m-0">
+            Completed
+          </Typography.Title>
+          <Badge count={tasks.length} showZero color={green['6']} />
+        </Flex>
+        <Button icon={<SyncOutlined />} loading={loading} onClick={refresh}>
+          Sync
+        </Button>
       </Flex>
       <Divider />
+      {loading && <Loader />}
       <Flex gap="middle" vertical>
         {tasks.length === 0 ? (
           <Result

@@ -1,8 +1,7 @@
-import { Button, DatePicker, Divider, Flex, Form, Input, Modal, ModalProps, Select } from 'antd'
+import { Button, DatePicker, Flex, Form, Input, Modal, ModalProps, Select } from 'antd'
 import { ReactElement } from 'react'
 import { ITaskBody } from '../../../../interfaces'
 import dayjs from 'dayjs'
-import * as React from 'react'
 
 type FieldType = {
   title?: string
@@ -19,15 +18,21 @@ interface Props extends Partial<ModalProps> {
 
 export const NewTaskItemModal = (props: Props): ReactElement | null => {
   const { handleCancel, handleOk, loading, ...others } = props
+  const [form] = Form.useForm()
 
   const onFinish = (values: ITaskBody): void => {
     console.log('Success:', values)
     const dueDate = values.dueDate ? new Date(values.dueDate) : new Date()
     handleOk({ ...values, dueDate: dueDate.toISOString() })
+    onReset()
   }
 
   const onFinishFailed = (errorInfo: unknown): void => {
     console.log('Failed:', errorInfo)
+  }
+
+  const onReset = (): void => {
+    form.resetFields()
   }
 
   return (
@@ -38,8 +43,8 @@ export const NewTaskItemModal = (props: Props): ReactElement | null => {
       onCancel={handleCancel}
       footer={null}
     >
-      <Divider />
       <Form
+        form={form}
         name="new-task-form"
         layout="vertical"
         labelCol={{ span: 16 }}

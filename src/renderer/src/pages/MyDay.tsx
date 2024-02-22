@@ -1,11 +1,11 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Badge, Button, Divider, Flex, Result, Typography } from 'antd'
+import { Alert, Badge, Button, Divider, Flex, Result, Typography } from 'antd'
 import { SunIcon } from 'lucide-react'
-import { Loader, TasksTypeWrapper } from '../components'
-import { ITaskResult } from '../../../../interfaces'
 import _ from 'lodash'
 import { SyncOutlined } from '@ant-design/icons'
 import { geekblue } from '@ant-design/colors'
+import { Loader, TasksTypeWrapper } from '../components'
+import { ITaskResult } from '../../../../interfaces'
 
 export const MyDayPage = (): ReactElement | null => {
   const [tasks, setTasks] = useState<{ status: string; tasks: ITaskResult[] }[]>([])
@@ -26,6 +26,7 @@ export const MyDayPage = (): ReactElement | null => {
         .map((items, status) => {
           return { status, tasks: items }
         })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         .values()
         .value()
@@ -62,9 +63,23 @@ export const MyDayPage = (): ReactElement | null => {
           </Typography.Title>
           <Badge count={tasksCount} showZero color={geekblue['5']} />
         </Flex>
-        <Button icon={<SyncOutlined />} loading={loading} onClick={refresh} />
+        <Button icon={<SyncOutlined />} loading={loading} onClick={refresh}>
+          Sync
+        </Button>
       </Flex>
       <Divider />
+      <Alert
+        message={`If you can't see your task click on the sync/refresh button`}
+        type="info"
+        showIcon
+        action={
+          <Button size="small" type="text" onClick={refresh}>
+            Refresh
+          </Button>
+        }
+        closable
+      />
+      <br />
       {loading && <Loader />}
       {tasks.length === 0 ? (
         <Result

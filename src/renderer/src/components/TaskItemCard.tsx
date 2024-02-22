@@ -1,4 +1,4 @@
-import { Card, CardProps, Flex, Typography, notification } from 'antd'
+import { Card, CardProps, Divider, Flex, notification, Typography } from 'antd'
 import { ReactElement, useCallback, useState } from 'react'
 import { IPrority, ITaskBody, ITaskResult } from '../../../../interfaces'
 import { TaskDetailsModal } from './TaskDetailsModal'
@@ -18,11 +18,11 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
   const [selectedTask, setSelectedTask] = useState<ITaskResult>()
   const [loading, setLoading] = useState(false)
 
-  const showModal = () => {
+  const showModal = (): void => {
     setIsModalOpen(true)
   }
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setIsModalOpen(false)
   }
 
@@ -44,6 +44,7 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
 
   const handleDelete = async (id: string | number): Promise<void> => {
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       await window.api.deleteTaskById(id)
       handleCancel()
@@ -94,10 +95,13 @@ export const TaskItemCard = (props: Props): ReactElement | null => {
           />
         </Flex>
         {task.due_date && (
-          <Flex gap="small" align="center">
-            <ClockCircleOutlined />
-            <small>{dayjs(task.due_date).format('YYYY-MM-DD HH:mm').toString()}</small>
-          </Flex>
+          <>
+            <Divider style={{ margin: '12px 0' }} />
+            <Flex gap="small" align="center">
+              <ClockCircleOutlined />
+              <small>{dayjs(task.due_date).format('YYYY-MM-DD HH:mm').toString()}</small>
+            </Flex>
+          </>
         )}
       </Card>
       <TaskDetailsModal

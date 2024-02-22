@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ReactElement, useEffect } from 'react'
 import {
   Alert,
   Button,
@@ -17,7 +18,6 @@ import {
   Spin,
   Typography
 } from 'antd'
-import { ReactElement, useEffect } from 'react'
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { IStatus, ITaskBody, ITaskResult } from '../../../../interfaces'
@@ -44,26 +44,26 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
 
   console.log(data)
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: ITaskBody): void => {
     console.log('Success:', values)
     handleOk({ ...values })
   }
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: unknown): void => {
     console.log('Failed:', errorInfo)
   }
 
   const deletePopupConfirm = (e: React.MouseEvent<HTMLElement> | undefined): void => {
     if (data?.id) {
       console.log(e)
-      message.success('Click on Yes')
+      message.success('Task is deleted.')
       handleDelete(data.id)
     }
   }
 
   const deletePopupCancel = (e: React.MouseEvent<HTMLElement> | undefined): void => {
     console.log(e)
-    message.error('Click on No')
+    message.error('Task deletion cancelled.')
   }
 
   useEffect(() => {
@@ -88,9 +88,16 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
       width={720}
     >
       {loading && <Spin />}
-      <Divider />
-      <Alert message={`Task "${data?.title}" has been marked as complete`} type="info" />
-      <br />
+      {data?.status === IStatus.completed && (
+        <>
+          <Alert
+            message={`Task "${data?.title}" has been marked as complete, hence no further editing is allowed.`}
+            type="success"
+            showIcon
+          />
+          <br />
+        </>
+      )}
       <Row justify="center" align="top" gutter={[16, 16]}>
         <Col sm={24} md={16} lg={18}>
           <Form
@@ -109,7 +116,7 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
               name="title"
               rules={[{ required: true, message: 'Please input your title!' }]}
             >
-              <Input />
+              <Input disabled={data?.status == IStatus.completed} />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -117,7 +124,7 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
               name="description"
               rules={[{ required: false, message: 'Please input your password!' }]}
             >
-              <Input.TextArea />
+              <Input.TextArea disabled={data?.status == IStatus.completed} />
             </Form.Item>
 
             <Row gutter={16}>
@@ -133,6 +140,7 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
                       { value: 0, label: 'In Progress' },
                       { value: 1, label: 'Done' }
                     ]}
+                    disabled={data?.status == IStatus.completed}
                   />
                 </Form.Item>
               </Col>
@@ -149,6 +157,7 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
                       { value: 1, label: 'Medium' },
                       { value: 2, label: 'High' }
                     ]}
+                    disabled={data?.status == IStatus.completed}
                   />
                 </Form.Item>
               </Col>
@@ -159,14 +168,20 @@ export const TaskDetailsModal = (props: Props): ReactElement | null => {
               name="dueDate"
               rules={[{ required: false, message: 'Please select your priority!' }]}
             >
-              <DatePicker style={{ width: '100%' }} minDate={dayjs()} />
+              <DatePicker
+                style={{ width: '100%' }}
+                minDate={dayjs()}
+                disabled={data?.status == IStatus.completed}
+              />
             </Form.Item>
 
             <Form.Item wrapperCol={{ span: 24 }}>
               <Flex justify="flex-start" gap="small">
-                <Button type="primary" htmlType="submit" loading={loading}>
-                  Save
-                </Button>
+                {data?.status !== IStatus.completed && (
+                  <Button type="primary" htmlType="submit" loading={loading}>
+                    Save
+                  </Button>
+                )}
                 <Button onClick={handleCancel}>Cancel</Button>
               </Flex>
             </Form.Item>
